@@ -6,6 +6,53 @@ var Item = require('./Item.js');
 function GildedRose() {
 }
 
+function diminuerQualiteSulfura(toEdit){
+	if (toEdit.getQuality() > 0 && toEdit.getName() !== "Sulfuras, Hand of Ragnaros")
+		toEdit.setQuality(toEdit.getQuality() - 1);
+}
+
+function parcoursList(listeAParcourir){
+	for (var i = 0; i < listeAParcourir.length; i++) {
+		if (listeAParcourir[i].getName() !== "Aged Brie" 
+			&& listeAParcourir[i].getName() !== "Backstage passes to a TAFKAL80ETC concert") {
+			diminuerQualiteSulfura(listeAParcourir[i]);
+		} else {
+			if (listeAParcourir[i].getQuality() < 50) {
+				listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
+
+				if (listeAParcourir[i].getName()
+						 === "Backstage passes to a TAFKAL80ETC concert") {
+					if (listeAParcourir[i].getSellIn() < 11 && listeAParcourir[i].getQuality() < 50)
+						listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
+
+					if (listeAParcourir[i].getSellIn() < 6 && listeAParcourir[i].getQuality() < 50)
+						listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
+					}
+				}
+		}
+
+		if (listeAParcourir[i].getName() !== "Sulfuras, Hand of Ragnaros")
+			listeAParcourir[i].setSellIn(listeAParcourir[i].getSellIn() - 1);
+
+		if (listeAParcourir[i].getSellIn() < 0) {
+			if (listeAParcourir[i].getName() !== "Aged Brie") {
+				if (listeAParcourir[i].getName()
+						 !== "Backstage passes to a TAFKAL80ETC concert") {
+					if (listeAParcourir[i].getQuality() > 0 && 
+						listeAParcourir[i].getName()!== "Sulfuras, Hand of Ragnaros")
+							listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() - 1);
+					}
+				} else {
+					listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() - listeAParcourir[i].getQuality());
+				}
+			} else {
+				if (listeAParcourir[i].getQuality() < 50)
+					listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
+			}
+		}
+	}
+}
+
 GildedRose.prototype = {
 
     makeItems: function () {
@@ -21,65 +68,6 @@ GildedRose.prototype = {
 
     updateQuality: function (list) {
         var items = list;
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].getName() !== "Aged Brie"
-                    && items[i].getName()
-                             !== "Backstage passes to a TAFKAL80ETC concert") {
-                if (items[i].getQuality() > 0) {
-                    if (items[i].getName()
-                             !== "Sulfuras, Hand of Ragnaros") {
-                        items[i].setQuality(items[i].getQuality() - 1);
-                    }
-                }
-            } else {
-                if (items[i].getQuality() < 50) {
-                    items[i].setQuality(items[i].getQuality() + 1);
-
-                    if (items[i].getName()
-                             === "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].getSellIn() < 11) {
-                            if (items[i].getQuality() < 50) {
-                                items[i].setQuality(
-                                        items[i].getQuality() + 1);
-                            }
-                        }
-
-                        if (items[i].getSellIn() < 6) {
-                            if (items[i].getQuality() < 50) {
-                                items[i].setQuality(
-                                        items[i].getQuality() + 1);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (items[i].getName() !== "Sulfuras, Hand of Ragnaros") {
-                items[i].setSellIn(items[i].getSellIn() - 1);
-            }
-
-            if (items[i].getSellIn() < 0) {
-                if (items[i].getName() !== "Aged Brie") {
-                    if (items[i].getName()
-                             !== "Backstage passes to a TAFKAL80ETC concert") {
-                        if (items[i].getQuality() > 0) {
-                            if (items[i].getName()
-                                     !== "Sulfuras, Hand of Ragnaros") {
-                                items[i].setQuality(
-                                        items[i].getQuality() - 1);
-                            }
-                        }
-                    } else {
-                        items[i].setQuality(
-                                items[i].getQuality()
-                                        - items[i].getQuality());
-                    }
-                } else {
-                    if (items[i].getQuality() < 50) {
-                        items[i].setQuality(items[i].getQuality() + 1);
-                    }
-                }
-            }
-        }
+        parcoursList(items);
     }
 }
