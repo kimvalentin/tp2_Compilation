@@ -7,47 +7,32 @@ function GildedRose() {
 }
 
 function diminuerQualiteSulfura(toEdit){
-	if (toEdit.getQuality() > 0 && toEdit.getName() !== "Sulfuras, Hand of Ragnaros")
-		toEdit.setQuality(toEdit.getQuality() - 1);
+	toEdit.plusQualiteEtNom(0,"Sulfuras, Hand of Ragnaros");
 }
 
 function parcoursList(listeAParcourir){
 	for (var i = 0; i < listeAParcourir.length; i++) {
-		if (listeAParcourir[i].getName() !== "Aged Brie" 
-			&& listeAParcourir[i].getName() !== "Backstage passes to a TAFKAL80ETC concert") {
+		if (listeAParcourir[i].deuxNomDifferents("Aged Brie","Backstage passes to a TAFKAL80ETC concert"))
 			diminuerQualiteSulfura(listeAParcourir[i]);
 		} else {
-			if (listeAParcourir[i].getQuality() < 50) {
-				listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
+			if (listeAParcourir[i].qualiteEnDessousSeuil(50)) {
+				listeAParcourir[i].augmenterQualite(1);
 
-				if (listeAParcourir[i].getName()
-						 === "Backstage passes to a TAFKAL80ETC concert") {
-					if (listeAParcourir[i].getSellIn() < 11 && listeAParcourir[i].getQuality() < 50)
-						listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
-
-					if (listeAParcourir[i].getSellIn() < 6 && listeAParcourir[i].getQuality() < 50)
-						listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
-					}
-				}
+				if (listeAParcourir[i].matchName("Backstage passes to a TAFKAL80ETC concert"))
+					listeAParcourir[i].augmenterQualitePrix(50, 11, 6);
 		}
 
-		if (listeAParcourir[i].getName() !== "Sulfuras, Hand of Ragnaros")
-			listeAParcourir[i].setSellIn(listeAParcourir[i].getSellIn() - 1);
+		if (listeAParcourir[i].pasMatchName("Sulfuras, Hand of Ragnaros"))
+			listeAParcourir[i].diminuerPrix();
 
-		if (listeAParcourir[i].getSellIn() < 0) {
-			if (listeAParcourir[i].getName() !== "Aged Brie") {
-				if (listeAParcourir[i].getName()
-						 !== "Backstage passes to a TAFKAL80ETC concert") {
-					if (listeAParcourir[i].getQuality() > 0 && 
-						listeAParcourir[i].getName()!== "Sulfuras, Hand of Ragnaros")
-							listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() - 1);
-					}
+		if (listeAParcourir[i].prixInferieur(0)) {
+			if (listeAParcourir[i].deuxNomDifferents("Aged Brie","Backstage passes to a TAFKAL80ETC concert"))
+				diminuerQualiteSulfura(listeAParcourir[i]);
 				} else {
-					listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() - listeAParcourir[i].getQuality());
+					listeAParcourir[i].razQualite();
 				}
 			} else {
-				if (listeAParcourir[i].getQuality() < 50)
-					listeAParcourir[i].setQuality(listeAParcourir[i].getQuality() + 1);
+				listeAParcourir[i].moinsQualiteAugmente(50);
 			}
 		}
 	}
